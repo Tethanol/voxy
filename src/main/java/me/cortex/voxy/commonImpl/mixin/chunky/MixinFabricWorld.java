@@ -6,10 +6,9 @@ import com.mojang.datafixers.util.Either;
 
 import me.cortex.voxy.common.world.service.VoxelIngestService;
 import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ChunkHolder.ChunkLoadingFailure;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,20 +20,21 @@ import java.util.concurrent.CompletableFuture;
 @Mixin(FabricWorld.class)
 public class MixinFabricWorld {
 
+    @SuppressWarnings("unchecked")
     @WrapOperation(
         method = "getChunkAtAsync",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/server/level/ChunkHolder;getOrScheduleFuture(Lnet/minecraft/world/level/chunk/ChunkStatus;Lnet/minecraft/server/level/ChunkMap;)Ljava/util/concurrent/CompletableFuture;"
+            target = "Lnet/minecraft/server/level/ChunkHolder;getOrScheduleFuture(Lnet/minecraft/world/level/chunk/status/ChunkStatus;Lnet/minecraft/server/level/ChunkMap;)Ljava/util/concurrent/CompletableFuture;"
         )
     )
     private CompletableFuture<?> wrapGetOrScheduleFuture(
         ChunkHolder holder,
         ChunkStatus status,
         ChunkMap storage,
-        Operation<CompletableFuture<Either<ChunkAccess, ChunkLoadingFailure>>> original
+        Operation<CompletableFuture<Either<ChunkAccess, Object>>> original
     ) {
-        CompletableFuture<Either<ChunkAccess, ChunkLoadingFailure>> future = original.call(holder, status, storage);
+        CompletableFuture<Either<ChunkAccess, Object>> future = original.call(holder, status, storage);
 
         return future.thenApply(res -> {
             res.ifLeft(chunk -> {

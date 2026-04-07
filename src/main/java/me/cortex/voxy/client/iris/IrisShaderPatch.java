@@ -2,7 +2,6 @@ package me.cortex.voxy.client.iris;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import com.llamalad7.mixinextras.lib.gson.Strictness;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
