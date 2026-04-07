@@ -22,7 +22,6 @@
     "minecraft.MixinFogRenderer",
     "minecraft.MixinGlDebug",
     "minecraft.MixinLevelRenderer",
-    "minecraft.MixinMinecraft",
     "minecraft.MixinRenderSystem",
     "minecraft.MixinWindow",
     "sodium.AccessorChunkTracker",
