@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version "1.14-SNAPSHOT"
+    id 'fabric-loom' version "1.9.2"
     id 'maven-publish'
 }
 
@@ -35,30 +35,6 @@ repositories {
         }
         filter {
             includeGroup "net.caffeinemc"
-        }
-    }
-
-
-
-    maven { url = "https://maven.shedaniel.me/" }
-    maven { url = "https://maven.terraformersmc.com/releases/" }
-    maven { url = "https://repo.enonic.com/public/"}
-
-    exclusiveContent {
-        forRepository {
-            ivy {
-                name = "github"
-                url = "https://github.com/"
-                patternLayout {
-                    artifact '/[organisation]/[module]/releases/download/[revision]/[module]-[revision]-[classifier].[ext]'
-                }
-                metadataSources {
-                    artifact()
-                }
-            }
-        }
-        filter {
-            includeModuleByRegex("[^\\.]+", "nvidium")
         }
     }
 }
@@ -128,19 +104,16 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     //TODO: this is to eventually not need sodium installed as atm its just used for parsing shaders
-    modRuntimeOnlyMsk "maven.modrinth:sodium:mc1.20.1-0.5.13-fabric"
-    modCompileOnly "maven.modrinth:sodium:mc1.20.1-0.5.13-fabric"
+    modRuntimeOnlyMsk "maven.modrinth:sodium:mc1.21.1-0.6.12-fabric"
+    modCompileOnly "maven.modrinth:sodium:mc1.21.1-0.6.12-fabric"
 
-    modImplementation("maven.modrinth:lithium:mc1.20.1-0.11.4-fabric")
+    modImplementation("maven.modrinth:lithium:mc1.21.1-0.13.0+build.9-fabric")
 
-    // modRuntimeOnlyMsk "drouarb:nvidium:0.4.1-beta9:1.21-1.21.1@jar"
-    modCompileOnly "maven.modrinth:nvidium:0.2.6-beta-1.20.1"
+    modCompileOnly("maven.modrinth:modmenu:11.0.3")
+    modRuntimeOnlyMsk("maven.modrinth:modmenu:11.0.3")
 
-    modCompileOnly("maven.modrinth:modmenu:7.2.2")
-    modRuntimeOnlyMsk("maven.modrinth:modmenu:7.2.2")
-
-    modCompileOnly("maven.modrinth:iris:1.7.6+1.20.1")
-    modRuntimeOnlyMsk("maven.modrinth:iris:1.7.6+1.20.1")
+    modCompileOnly("maven.modrinth:iris:1.8.0+mc1.21.1")
+    modRuntimeOnlyMsk("maven.modrinth:iris:1.8.0+mc1.21.1")
     // iris needs these for some reason
     modRuntimeOnlyMsk("io.github.douira:glsl-transformer:2.0.1")
     modRuntimeOnlyMsk("org.anarres:jcpp:1.4.14")
@@ -149,20 +122,12 @@ dependencies {
 
     //modCompileOnly("maven.modrinth:immersiveportals:v5.1.7-mc1.20.4")
 
-    modCompileOnly("maven.modrinth:sodium-extra:mc1.20.1-0.5.9")
-    modRuntimeOnlyMsk("maven.modrinth:sodium-extra:mc1.20.1-0.5.9")
-    modRuntimeOnlyMsk("net.caffeinemc:CaffeineConfig:1.3.0+1.17")
-
     modCompileOnly("maven.modrinth:Chunky:1.3.146-fabric")
     modRuntimeOnlyMsk("maven.modrinth:Chunky:1.3.146-fabric")
 
     // modRuntimeOnlyMsk("maven.modrinth:spark:1.10.53-fabric")
     modRuntimeOnlyMsk("maven.modrinth:fabric-permissions-api:0.3.1")
     //modRuntimeOnly("maven.modrinth:nsight-loader:1.2.0")
-
-    //modImplementation('io.github.douira:glsl-transformer:2.0.1')
-
-    modCompileOnly("maven.modrinth:vivecraft:1.20.1-1.3.7-fabric")
 
     // modCompileOnly("maven.modrinth:flashback:rNCr1Rbs")
 
@@ -171,9 +136,8 @@ dependencies {
     // modCompileOnly("com.seibel.distanthorizons:core:core-2.4.1-b-dev-1.20.1")
     // modCompileOnly("com.seibel.distanthorizons:DistantHorizons:common-2.4.1-b-dev-1.20.1")
     // modRuntimeOnlyMsk("com.seibel.distanthorizons:DistantHorizons:fabric-2.4.1-b-dev-1.20.1")
-    modCompileOnly("maven.modrinth:DistantHorizons:2.4.5-b-1.20.1")
-    modRuntimeOnlyMsk("maven.modrinth:DistantHorizons:2.4.5-b-1.20.1")
-    modRuntimeOnlyMsk("maven.modrinth:indium:1.0.36+mc1.20.1")
+    modCompileOnly("maven.modrinth:DistantHorizons:2.5.1-b-1.21.1")
+    modRuntimeOnlyMsk("maven.modrinth:DistantHorizons:2.5.1-b-1.21.1")
 }
 
 

@@ -5,9 +5,8 @@ import me.cortex.voxy.client.core.IGetVoxyRenderSystem;
 import me.cortex.voxy.client.core.rendering.Viewport;
 import me.cortex.voxy.client.core.util.IrisUtil;
 import me.cortex.voxy.commonImpl.VoxyCommon;
-import me.jellysquid.mods.sodium.client.gl.device.CommandList;
-import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.ChunkRenderMatrices;
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
+import net.caffeinemc.mods.sodium.client.render.chunk.ChunkRenderMatrices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Dynamic;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = SodiumWorldRenderer.class, remap = false)
 public class MixinSodiumWorldRendererLegacy {
     @Inject(method = "initRenderer", at = @At("TAIL"), remap = false)
-    private void voxy$injectThreadUpdate(CommandList cl, CallbackInfo ci) {
+    private void voxy$injectThreadUpdate(CallbackInfo ci) {
         var vi = VoxyCommon.getInstance();
         if (vi != null) vi.updateDedicatedThreads();
     }

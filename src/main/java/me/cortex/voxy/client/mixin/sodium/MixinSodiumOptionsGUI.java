@@ -2,8 +2,8 @@ package me.cortex.voxy.client.mixin.sodium;
 
 import me.cortex.voxy.client.config.VoxyConfigScreenPages;
 import me.cortex.voxy.commonImpl.VoxyCommon;
-import me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI;
-import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
+import net.caffeinemc.mods.sodium.client.gui.SodiumOptionsScreen;
+import net.caffeinemc.mods.sodium.client.gui.options.OptionPage;
 import net.minecraft.client.gui.screens.Screen;
 
 import org.spongepowered.asm.mixin.Final;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(SodiumOptionsGUI.class)
+@Mixin(SodiumOptionsScreen.class)
 public class MixinSodiumOptionsGUI {
     @Shadow(remap = false) @Final private List<OptionPage> pages;
 

@@ -6,20 +6,17 @@ import me.cortex.voxy.client.core.IGetVoxyRenderSystem;
 import me.cortex.voxy.client.core.VoxyRenderSystem;
 import me.cortex.voxy.common.world.service.VoxelIngestService;
 import me.cortex.voxy.commonImpl.VoxyCommon;
-import me.cortex.voxy.commonImpl.WorldIdentifier;
-import me.jellysquid.mods.sodium.client.gl.device.CommandList;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.executor.ChunkBuilder;
-import me.jellysquid.mods.sodium.client.render.chunk.data.BuiltSectionInfo;
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTrackerHolder;
-// import me.jellysquid.mods.sodium.client.render.chunk.translucent_sorting.SortBehavior;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSection;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
+import net.caffeinemc.mods.sodium.client.render.chunk.compile.executor.ChunkBuilder;
+import net.caffeinemc.mods.sodium.client.render.chunk.data.BuiltSectionInfo;
+import net.caffeinemc.mods.sodium.client.render.chunk.map.ChunkTrackerHolder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,7 +37,7 @@ public class MixinRenderSectionManager {
     @Shadow @Final private ChunkBuilder builder;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void voxy$resetChunkTracker(ClientLevel level, int renderDistance, CommandList commandList, CallbackInfo ci) {
+    private void voxy$resetChunkTracker(ClientLevel level, int renderDistance, CallbackInfo ci) {
         if (level.levelRenderer != null) {
             var system = ((IGetVoxyRenderSystem)(level.levelRenderer)).getVoxyRenderSystem();
             if (system != null) {
@@ -93,18 +90,13 @@ public class MixinRenderSectionManager {
     @Unique private int cachedChunkStatus;
     @Unique private int bottomSectionY;
 
-    @Redirect(method = "updateSectionInfo", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/RenderSection;setInfo(Lme/jellysquid/mods/sodium/client/render/chunk/data/BuiltSectionInfo;)V"))
+    @Redirect(method = "updateSectionInfo", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/RenderSection;setInfo(Lnet/caffeinemc/mods/sodium/client/render/chunk/data/BuiltSectionInfo;)V"))
     private void voxy$updateOnUpload(RenderSection instance, BuiltSectionInfo info) {
-        boolean wasBuilt = instance.getFlags()!=0;
-        int flags = instance.getFlags();
+        boolean wasBuilt = instance.isBuilt();
         instance.setInfo(info);
-        if (wasBuilt == (instance.getFlags()!=0)) {//Only want to do stuff on change
+        if (wasBuilt == instance.isBuilt()) {//Only want to do stuff on change
             return;
         }
-
-        flags |= instance.getFlags();
-        if (flags == 0)//Only process things with stuff
-            return;
 
         VoxyRenderSystem system = ((IGetVoxyRenderSystem)(this.world.levelRenderer)).getVoxyRenderSystem();
         if (system == null) {
