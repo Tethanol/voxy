@@ -497,7 +497,8 @@ public class WorldImporter implements IDataImporter {
             //TODO: if its only partial, it means should try to upgrade the nbt format with datafixerupper probably
             return;
         });
-        var blockStates = blockStatesRes.getOrThrow(false, Logger::error);
+        blockStatesRes.ifError(e -> Logger.error(e.message()));
+        var blockStates = blockStatesRes.getOrThrow();
         var biomes = this.defaultBiomeProvider;
         var optBiomes = section.getCompound("biomes");
         if (!optBiomes.isEmpty()) {
