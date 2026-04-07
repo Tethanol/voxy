@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version "1.9.2"
+    id 'fabric-loom' version "1.13.6"
     id 'maven-publish'
 }
 
@@ -104,16 +104,16 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     //TODO: this is to eventually not need sodium installed as atm its just used for parsing shaders
-    modRuntimeOnlyMsk "maven.modrinth:sodium:mc1.21.1-0.6.12-fabric"
-    modCompileOnly "maven.modrinth:sodium:mc1.21.1-0.6.12-fabric"
+    modCompileOnly "maven.modrinth:sodium:mc1.21.1-0.6.0-fabric"
+    modRuntimeOnlyMsk "maven.modrinth:sodium:mc1.21.1-0.6.0-fabric"
 
-    modImplementation("maven.modrinth:lithium:mc1.21.1-0.13.0+build.9-fabric")
+    modImplementation "maven.modrinth:lithium:mc1.21.1-0.13.0"
 
     modCompileOnly("maven.modrinth:modmenu:11.0.3")
     modRuntimeOnlyMsk("maven.modrinth:modmenu:11.0.3")
 
-    modCompileOnly("maven.modrinth:iris:1.8.0+mc1.21.1")
-    modRuntimeOnlyMsk("maven.modrinth:iris:1.8.0+mc1.21.1")
+    modCompileOnly "maven.modrinth:iris:1.8.0+1.21.1-fabric"
+    modRuntimeOnlyMsk "maven.modrinth:iris:1.8.0+1.21.1-fabric"
     // iris needs these for some reason
     modRuntimeOnlyMsk("io.github.douira:glsl-transformer:2.0.1")
     modRuntimeOnlyMsk("org.anarres:jcpp:1.4.14")
@@ -136,8 +136,8 @@ dependencies {
     // modCompileOnly("com.seibel.distanthorizons:core:core-2.4.1-b-dev-1.20.1")
     // modCompileOnly("com.seibel.distanthorizons:DistantHorizons:common-2.4.1-b-dev-1.20.1")
     // modRuntimeOnlyMsk("com.seibel.distanthorizons:DistantHorizons:fabric-2.4.1-b-dev-1.20.1")
-    modCompileOnly("maven.modrinth:DistantHorizons:2.5.1-b-1.21.1")
-    modRuntimeOnlyMsk("maven.modrinth:DistantHorizons:2.5.1-b-1.21.1")
+    modCompileOnly "maven.modrinth:distanthorizons:2.4.5-b-1.21.1"
+    modRuntimeOnlyMsk "maven.modrinth:distanthorizons:2.4.5-b-1.21.1"
 }
 
 
