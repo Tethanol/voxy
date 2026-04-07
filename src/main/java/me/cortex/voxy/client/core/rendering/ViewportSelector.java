@@ -2,13 +2,11 @@ package me.cortex.voxy.client.core.rendering;
 
 import me.cortex.voxy.client.core.util.IrisUtil;
 import net.fabricmc.loader.api.FabricLoader;
-import org.vivecraft.api.client.VRRenderingAPI;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import static org.vivecraft.api.client.data.RenderPass.VANILLA;
 
 public class ViewportSelector <T extends Viewport<?>> {
     public static final boolean VIVECRAFT_INSTALLED = FabricLoader.getInstance().isModLoaded("vivecraft");
@@ -27,11 +25,20 @@ public class ViewportSelector <T extends Viewport<?>> {
     }
 
     private T getVivecraftViewport() {
-        var pass = VRRenderingAPI.instance().getCurrentRenderPass();
-        if (pass == null || pass == VANILLA) {
+        try {
+            Class<?> apiClass = Class.forName("org.vivecraft.api.client.VRRenderingAPI");
+            Method instanceMethod = apiClass.getMethod("instance");
+            Object api = instanceMethod.invoke(null);
+            Method passMethod = apiClass.getMethod("getCurrentRenderPass");
+            Object pass = passMethod.invoke(api);
+            if (pass == null) return null;
+            Class<?> vanillaClass = Class.forName("org.vivecraft.api.client.data.RenderPass");
+            Object vanillaValue = vanillaClass.getField("VANILLA").get(null);
+            if (pass == vanillaValue) return null;
+            return this.getOrCreate(pass);
+        } catch (Exception e) {
             return null;
         }
-        return this.getOrCreate(pass);
     }
 
     private static final Object IRIS_SHADOW_OBJECT = new Object();

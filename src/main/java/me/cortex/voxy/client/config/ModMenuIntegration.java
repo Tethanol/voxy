@@ -5,9 +5,9 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.cortex.voxy.client.mixin.sodium.AccessorSodiumOptionsGUI;
 import me.cortex.voxy.common.Logger;
 import me.cortex.voxy.commonImpl.VoxyCommon;
-import me.jellysquid.mods.sodium.client.SodiumClientMod;
-import me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI;
-import me.jellysquid.mods.sodium.client.gui.screen.ConfigCorruptedScreen;
+import net.caffeinemc.mods.sodium.client.SodiumClientMod;
+import net.caffeinemc.mods.sodium.client.gui.SodiumOptionsGUI;
+import net.caffeinemc.mods.sodium.client.gui.screen.ConfigCorruptedScreen;
 import net.minecraft.client.gui.screens.Screen;
 
 public class ModMenuIntegration implements ModMenuApi {

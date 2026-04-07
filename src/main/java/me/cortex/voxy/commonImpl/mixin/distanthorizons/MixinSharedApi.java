@@ -34,8 +34,6 @@ public class MixinSharedApi {
         ChunkAccess chunkAccess;
         if (chunkWrapper instanceof loaderCommon.fabric.com.seibel.distanthorizons.common.wrappers.chunk.ChunkWrapper cw) {
             chunkAccess = cw.getChunk();
-        } else if (chunkWrapper instanceof loaderCommon.forge.com.seibel.distanthorizons.common.wrappers.chunk.ChunkWrapper cw) {
-            chunkAccess = cw.getChunk();
         } else {
             Logger.error("DH MixinSharedApi: Unknown chunk wrapper class: " + chunkWrapper.getClass().getName());
             return;
