@@ -6,6 +6,7 @@ import me.cortex.voxy.client.core.IGetVoxyRenderSystem;
 import me.cortex.voxy.client.core.VoxyRenderSystem;
 import me.cortex.voxy.common.world.service.VoxelIngestService;
 import me.cortex.voxy.commonImpl.VoxyCommon;
+import net.caffeinemc.mods.sodium.client.gl.device.CommandList;
 import net.caffeinemc.mods.sodium.client.render.chunk.RenderSection;
 import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.executor.ChunkBuilder;
@@ -37,7 +38,7 @@ public class MixinRenderSectionManager {
     @Shadow @Final private ChunkBuilder builder;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void voxy$resetChunkTracker(ClientLevel level, int renderDistance, CallbackInfo ci) {
+    private void voxy$resetChunkTracker(ClientLevel level, int renderDistance, CommandList commandList, CallbackInfo ci) {
         if (level.levelRenderer != null) {
             var system = ((IGetVoxyRenderSystem)(level.levelRenderer)).getVoxyRenderSystem();
             if (system != null) {
