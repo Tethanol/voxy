@@ -90,17 +90,17 @@ public class MixinRenderSectionManager {
     @Unique private int cachedChunkStatus;
     @Unique private int bottomSectionY;
 
-    @Redirect(method = "updateSectionInfo", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/RenderSection;setInfo(Lnet/caffeinemc/mods/sodium/client/render/chunk/data/BuiltSectionInfo;)V"))
-    private void voxy$updateOnUpload(RenderSection instance, BuiltSectionInfo info) {
+    @Redirect(method = "updateSectionInfo", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/RenderSection;setInfo(Lnet/caffeinemc/mods/sodium/client/render/chunk/data/BuiltSectionInfo;)Z"))
+    private boolean voxy$updateOnUpload(RenderSection instance, BuiltSectionInfo info) {
         boolean wasBuilt = instance.isBuilt();
-        instance.setInfo(info);
+        boolean infoChanged = instance.setInfo(info);
         if (wasBuilt == instance.isBuilt()) {//Only want to do stuff on change
-            return;
+            return infoChanged;
         }
 
         VoxyRenderSystem system = ((IGetVoxyRenderSystem)(this.level.levelRenderer)).getVoxyRenderSystem();
         if (system == null) {
-            return;
+            return infoChanged;
         }
         int x = instance.getChunkX(), y = instance.getChunkY(), z = instance.getChunkZ();
 
@@ -172,6 +172,6 @@ public class MixinRenderSectionManager {
                 }
             }
         }
-        return;
+        return infoChanged;
     }
 }
