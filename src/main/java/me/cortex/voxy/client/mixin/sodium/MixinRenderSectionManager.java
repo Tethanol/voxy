@@ -32,7 +32,7 @@ public class MixinRenderSectionManager {
     @Unique
     private static final boolean BOBBY_INSTALLED = FabricLoader.getInstance().isModLoaded("bobby");
 
-    @Shadow @Final private ClientLevel world;
+    @Shadow @Final private ClientLevel level;
 
     @Shadow @Final private ChunkBuilder builder;
 
@@ -44,14 +44,14 @@ public class MixinRenderSectionManager {
                 system.chunkBoundRenderer.reset();
             }
         }
-        this.bottomSectionY = this.world.getMinBuildHeight()>>4;
+        this.bottomSectionY = this.level.getMinBuildHeight()>>4;
     }
 
     @Inject(method = "onChunkRemoved", at = @At("HEAD"))
     private void injectIngest(int x, int z, CallbackInfo ci) {
         //TODO: Am not quite sure if this is right
         if (VoxyConfig.CONFIG.ingestEnabled && !BOBBY_INSTALLED) {
-            var cccm = (ICheekyClientChunkCache)this.world.getChunkSource();
+            var cccm = (ICheekyClientChunkCache)this.level.getChunkSource();
             if (cccm != null) {
                 var chunk = cccm.voxy$cheekyGetChunk(x, z);
                 if (chunk != null) {
@@ -64,8 +64,8 @@ public class MixinRenderSectionManager {
 
     @Inject(method = "onChunkAdded", at = @At("HEAD"))
     private void voxy$ingestOnAdd(int x, int z, CallbackInfo ci) {
-        if (this.world.levelRenderer != null && VoxyConfig.CONFIG.ingestEnabled) {
-            var cccm = this.world.getChunkSource();
+        if (this.level.levelRenderer != null && VoxyConfig.CONFIG.ingestEnabled) {
+            var cccm = this.level.getChunkSource();
             if (cccm != null) {
                 var chunk = cccm.getChunk(x, z, ChunkStatus.FULL, false);
                 if (chunk != null) {
@@ -98,14 +98,14 @@ public class MixinRenderSectionManager {
             return;
         }
 
-        VoxyRenderSystem system = ((IGetVoxyRenderSystem)(this.world.levelRenderer)).getVoxyRenderSystem();
+        VoxyRenderSystem system = ((IGetVoxyRenderSystem)(this.level.levelRenderer)).getVoxyRenderSystem();
         if (system == null) {
             return;
         }
         int x = instance.getChunkX(), y = instance.getChunkY(), z = instance.getChunkZ();
 
         if (wasBuilt && VoxyConfig.CONFIG.ingestEnabled) {
-            var tracker = ((AccessorChunkTracker)ChunkTrackerHolder.get(this.world)).getChunkStatus();
+            var tracker = ((AccessorChunkTracker)ChunkTrackerHolder.get(this.level)).getChunkStatus();
             //in theory the cache value could be wrong but is so soso unlikely and at worst means we either duplicate ingest a chunk
             // which... could be bad ;-; or we dont ingest atall which is ok!
             long key = ChunkPos.asLong(x, z);
@@ -114,14 +114,14 @@ public class MixinRenderSectionManager {
                 this.cachedChunkStatus = tracker.getOrDefault(key, 0);
             }
             if (this.cachedChunkStatus == 3) {//If this chunk still has surrounding chunks
-                var cccm = this.world.getChunkSource();
+                var cccm = this.level.getChunkSource();
                 //var chunk = ((ICheekyClientChunkCache)cccm).voxy$cheekyGetChunk(x, z);
                 //Dont thinks need to use cheekyGetChunk here as thats handled by the inject into head of onChunkRemoved
                 // but only ingest if the chunkstatus is full and exists
                 var chunk = cccm.getChunk(x, z, ChunkStatus.FULL, false);
                 if (chunk != null) {
                     var section = chunk.getSection(y - this.bottomSectionY);
-                    var lp = this.world.getLightEngine();
+                    var lp = this.level.getLightEngine();
 
                     var csp = SectionPos.of(x, y, z);
                     var blp = lp.getLayerListener(LightLayer.BLOCK).getDataLayerData(csp);
@@ -152,7 +152,7 @@ public class MixinRenderSectionManager {
             // the geometry and lighting is guaranteed to be available. The onChunkAdded
             // hook fires too early (before lighting arrives for freshly generated chunks).
             if (VoxyConfig.CONFIG.ingestEnabled) {
-                var tracker = ((AccessorChunkTracker)ChunkTrackerHolder.get(this.world)).getChunkStatus();
+                var tracker = ((AccessorChunkTracker)ChunkTrackerHolder.get(this.level)).getChunkStatus();
                 long key = ChunkPos.asLong(x, z);
                 if (key != this.cachedChunkPos) {
                     this.cachedChunkPos = key;
@@ -161,8 +161,8 @@ public class MixinRenderSectionManager {
                 // Status 3 = chunk has all surrounding neighbours loaded (LIGHT_AND_BIOMES),
                 // so lighting is complete and safe to read.
                 if (this.cachedChunkStatus == 3) {
-                    var section = this.world.getChunk(x, z).getSection(y - this.bottomSectionY);
-                    var lp = this.world.getLightEngine();
+                    var section = this.level.getChunk(x, z).getSection(y - this.bottomSectionY);
+                    var lp = this.level.getLightEngine();
                     var csp = SectionPos.of(x, y, z);
                     var blp = lp.getLayerListener(LightLayer.BLOCK).getDataLayerData(csp);
                     var slp = lp.getLayerListener(LightLayer.SKY).getDataLayerData(csp);
