@@ -493,10 +493,7 @@ public class WorldImporter implements IDataImporter {
         }
 
         var blockStatesRes = blockStateCodec.parse(NbtOps.INSTANCE, section.getCompound("block_states"));
-        blockStatesRes.get().ifRight(partial -> {
-            //TODO: if its only partial, it means should try to upgrade the nbt format with datafixerupper probably
-            return;
-        });
+        //TODO: if its only partial, it means should try to upgrade the nbt format with datafixerupper probably
         blockStatesRes.ifError(e -> Logger.error(e.message()));
         var blockStates = blockStatesRes.getOrThrow();
         var biomes = this.defaultBiomeProvider;
